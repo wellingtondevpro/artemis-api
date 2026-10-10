@@ -16,4 +16,9 @@ public interface MCPClient {
      * @return O resultado retornado pela execução da ferramenta (futuramente poderá ser estruturado)
      */
     Object callTool(String toolName, Map<String, Object> arguments);
+
+    /**
+     * Requisita a lista de ferramentas disponíveis no servidor MCP (tools/list).
+     */
+    String getAvailableTools();
 }

@@ -35,4 +35,9 @@ public class MockMCPClient implements MCPClient {
             default -> "Execução simulada da ferramenta " + toolName + " concluída (Sem dados mockados).";
         };
     }
+
+    @Override
+    public String getAvailableTools() {
+        return "[]";
+    }
 }

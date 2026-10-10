@@ -15,6 +15,25 @@ Nesta abordagem, gerenciada pelo `ReActAgentService`, o LLM opera com autonomia 
 - A ferramenta *Spring AI Tool/Function Calling* injeta todas as funções mapeadas dos Servidores MCP no prompt de sistema.
 - O LLM aplica o modelo *Reasoning and Acting (ReAct)*: ele mesmo pensa, decide qual ferramenta chamar, avalia a resposta técnica e chama outras ferramentas iterativamente até atingir o objetivo, sem aprovações intermediárias.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant ReActAgentService
+    participant LLM as Spring AI (LLM)
+    participant MCP_Servers as MCP Servers
+
+    User->>ReActAgentService: Input ("Cancele a folga do João")
+    ReActAgentService->>LLM: Envia Input + Tools (MCP) disponíveis
+    loop Loop de Raciocínio (Thought -> Action -> Observation)
+        LLM-->>ReActAgentService: Pede execução da Tool (ex: buscar_id_joao)
+        ReActAgentService->>MCP_Servers: Executa Tool via MCP
+        MCP_Servers-->>ReActAgentService: Retorna JSON com os dados
+        ReActAgentService->>LLM: Entrega o resultado como observação
+    end
+    LLM-->>ReActAgentService: Conclui que o objetivo foi atingido (Resposta Final)
+    ReActAgentService-->>User: Retorna resposta em linguagem natural
+```
+
 ### 2. Fluxo Estruturado (Plan-and-Execute com Human-in-the-Loop)
 Abordagem altamente controlada e transparente, ideal para ações críticas:
 
